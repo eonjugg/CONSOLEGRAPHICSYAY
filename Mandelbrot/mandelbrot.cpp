@@ -1,78 +1,38 @@
+/*
+
+mandelbrot.cpp - prints characters to output file that draw the Mandelbrot Set at a specified zoom/location
+
+args:
+
+    1: display size
+    2: iterations per point
+
+*/
+
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
-class Complex {
-    double real;
-    double imag;
-
-    public:
-
-    Complex(double r, double i) {
-        real = r;
-        imag = i;
-    }
-
-    void square() {
-        //   (a + bi) * (a + bi)
-        // = aa + abi + abi + bibi
-        // = aa + 2abi - bb
-        // = (a^2 - b^2) + (2ab)i
-        
-        double realT, imagT;
-        realT = real*real - imag*imag;
-        imagT = 2*real*imag;
-
-        real = realT;
-        imag = imagT;
-    }
-
-    void mult() {
-        //   (a + bi) * (c + di)
-        // = ac + adi + cbi + bidi <- bidi=bd(i*i)=-bd
-        // = ac + (ad + cb)i - bd
-        // = (ac - bd) + (ad + cb)i
-    }
-
-    double dist() {
-        return sqrt(imag*imag + real*real);
-    }
-
-    friend Complex operator+(Complex a, Complex b) {
-        return Complex(a.real + b.real, a.imag + b.imag);
-    }
-
-    friend ostream& operator<<(ostream& out, const Complex& op) {
-        out << op.real;
-        out << (op.imag >= 0 ? " + " : " - ");
-        out << abs(op.imag) << "i";
-        return out;
-    }
-
-};
-
-bool in_set(Complex c, int iterations) {
-    bool decided = false;
-    Complex total(0, 0);
-    for (int i = 0; i < 10; i++) {
-        total.square();
-        total = total + c;
-        if (total.dist() > 2) {
-            decided = true;
-            break;
-        }
-    }
-    return !decided;
-}
-
 int main(int argc, char * argv[]) {
-    
-    const double cX = -0.6;     // coordinate at center of display
-    const double cY = 0;     
-    const double zoom = 2.5;   // how many units across is the display
-    const int display = 100; // display size (square)
-    const int dietinf = 50;  // number of iterations of z^2 + c to run to check for divergence
+
+    const double cX = -0.6;  // x coordinate at center of display
+    const double cY = 0;     // y
+    const double zoom = 2.5; // how many units across is the display
+
+    int display, dietinf;
+    if (argc > 1) {
+        string s = argv[1];
+        display = stoi(s);
+    } else {
+        display = 100; // display size (square)
+    }
+    if (argc > 2) {
+        string s = argv[2];
+        dietinf = stoi(s);
+    } else {
+        dietinf = 50;  // number of iterations of z^2 + c to run to check for divergence
+    }
 
     const double pointdist = zoom/display;
     const double xoffset = cX - zoom/2.0;
@@ -88,8 +48,31 @@ int main(int argc, char * argv[]) {
             xMap = xoffset + x*pointdist;
             yMap = yoffset + y*pointdist;
 
-            Complex check(xMap, yMap);
-            if (in_set(check, dietinf)) {
+            double real = xMap;
+            double imag = yMap;
+
+            bool decided = false;
+            for (int i = 0; i < dietinf; i++) {
+                //   z^2 + c
+
+                //   (a + bi) * (a + bi)
+                // = aa + abi + abi + bibi
+                // = aa + 2abi - bb
+                // = (a^2 - b^2) + (2ab)i
+                double tempX = real*real - imag*imag;
+                double tempY = 2*real*imag;
+
+                // + c
+                real = tempX + xMap;
+                imag = tempY + yMap;
+
+                if (sqrt(real*real + imag*imag) > 2) {
+                    decided = true;
+                    break;
+                }
+            }
+
+            if (!decided) {
                 ofile << "##";
             } else {
                 ofile << "..";
