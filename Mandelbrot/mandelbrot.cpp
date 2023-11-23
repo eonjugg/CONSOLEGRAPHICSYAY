@@ -28,13 +28,6 @@ class Complex {
         imag = imagT;
     }
 
-    void mult() {
-        //   (a + bi) * (c + di)
-        // = ac + adi + cbi + bidi <- bidi=bd(i*i)=-bd
-        // = ac + (ad + cb)i - bd
-        // = (ac - bd) + (ad + cb)i
-    }
-
     double dist() {
         return sqrt(imag*imag + real*real);
     }
