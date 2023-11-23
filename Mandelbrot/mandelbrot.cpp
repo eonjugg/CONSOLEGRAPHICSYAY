@@ -93,6 +93,6 @@ int main(int argc, char * argv[]) {
 
     ofile.close();
 
-    cout << "Finished -> output.txt" << endl;
+    cout << "Finished -> mandelbrot_out.txt" << endl;
 
 }
