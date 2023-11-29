@@ -18,13 +18,13 @@ using namespace std;
 
 const int s = 36; // side lengths of grid to print to console
 const int max_its = 1000; // max # of generations to print
-const bool randgrid = false; // randomize grid (overwrites below declaration)
-const bool borderon = true; // true to turn off borderless grid
+const bool randgrid = true; // randomize grid (overwrites below declaration)
+const bool borderon = false; // true to turn off borderless grid
 
-//bool grid[s][s] = {false};
+bool grid[s][s] = {false};
 
 // below instantiation will paste a glider generator at the top of the grid :o (s must be >36)
-bool grid[s][s] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+/* bool grid[s][s] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
                     {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
@@ -32,12 +32,12 @@ bool grid[s][s] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0
                     {1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                    {0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},};
+                    {0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},}; */
 
 void printgrid() {
     for (int y = 0; y < s; y++) {
         for (int x = 0; x < s; x++) {
-            char c = (grid[y][x] ? '#' : '.');
+            char c = (grid[y][x] ? '#' : ' ');
             cout << c << c;
         }
         cout << endl;
@@ -133,7 +133,7 @@ int main(int argc, char * argv[]) {
         system("clear"); //system("CLS") on windows, clears terminal (easier to watch 'animation')
         cout << "Gen " << i << endl;
         printgrid();
-        this_thread::sleep_for(200ms); // time to wait between generations
+        this_thread::sleep_for(100ms); // time to wait between generations
     }
 
 }

@@ -19,20 +19,8 @@ int main(int argc, char * argv[]) {
     const double cX = -0.6;  // x coordinate at center of display
     const double cY = 0;     // y
     const double zoom = 2.5; // how many units across is the display
-
-    int display, dietinf;
-    if (argc > 1) {
-        string s = argv[1];
-        display = stoi(s);
-    } else {
-        display = 100; // display size (square)
-    }
-    if (argc > 2) {
-        string s = argv[2];
-        dietinf = stoi(s);
-    } else {
-        dietinf = 50;  // number of iterations of z^2 + c to run to check for divergence
-    }
+    const int display = 100; // display size (square)
+    const int dietinf = 50;  // number of iterations of z^2 + c to run to check for divergence
 
     const double pointdist = zoom/display;
     const double xoffset = cX - zoom/2.0;
@@ -53,8 +41,6 @@ int main(int argc, char * argv[]) {
 
             bool decided = false;
             for (int i = 0; i < dietinf; i++) {
-                //   z^2 + c
-
                 //   (a + bi) * (a + bi)
                 // = aa + abi + abi + bibi
                 // = aa + 2abi - bb
@@ -66,8 +52,8 @@ int main(int argc, char * argv[]) {
                 real = tempX + xMap;
                 imag = tempY + yMap;
 
-                if (sqrt(real*real + imag*imag) > 2) {
-                    decided = true;
+                if (real*real + imag*imag > 4) { // sqrt(a^2 + c^2) > c  =>  a^2 + b^2 > c^2, c=2
+                    decided = true;              // no sqrt = faster
                     break;
                 }
             }
