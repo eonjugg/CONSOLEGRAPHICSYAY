@@ -24,9 +24,6 @@ void plot(vector< pair<double, double> > points, double minX, double maxX, doubl
 
     bool pointsMatrix[dispX][dispY] = {false};
 
-    const double cellSizeX = (1.0/dispX);
-    const double cellSizeY = (1.0/dispY);
-
     // insert points into cell matrix...
     for (int i = 0; i < points.size(); i++) {
         pair<double,double> p = points[i];
