@@ -8,6 +8,10 @@ graph/plot data in the terminal
 
 using namespace std;
 
+const int  dispX = 50;    // size of display
+const int  dispY = 25;
+const bool axes  = false; // display axises
+
 double map(double val, double inMin, double inMax, double outMin, double outMax) {
     double mapped = ( ( (val - inMin) / (inMax - inMin) ) * (outMax - outMin) ) + outMin;
     return mapped; // return min(outMax, max(outMin, mapped));
@@ -19,9 +23,6 @@ Control the ranges of x and y that are displayed with minX, maxX, minY, maxY.
 */
 void plot(vector< pair<double, double> > points, double minX, double maxX, double minY, double maxY) {
     
-    const int dispX = 50; // size of display
-    const int dispY = 25; // keep in mind terminal character is ~2x as tall as its width, so make dispX = 2*dispY for a square looking display
-
     bool pointsMatrix[dispX][dispY] = {false};
 
     // insert points into cell matrix...
@@ -46,13 +47,13 @@ void plot(vector< pair<double, double> > points, double minX, double maxX, doubl
             char c;
 
             // what symbol to draw (assuming it's in view range)
-            if (x == xzero && y == yzero) {
+            if (x == xzero && y == yzero && axes) {
                 c = '@'; // origin (0, 0)
             } else if (pointsMatrix[x][y]) {
                 c = '*'; // point
-            } else if (x == xzero) {
+            } else if (x == xzero && axes) {
                 c = '|'; // y axis (all points x = 0)
-            } else if (y == yzero) {
+            } else if (y == yzero && axes) {
                 c = '-'; // x axis (all points y = 0)
             } else {
                 c = ' '; // background
@@ -61,6 +62,25 @@ void plot(vector< pair<double, double> > points, double minX, double maxX, doubl
         }
         cout << endl;
     }
+
+    printf("points: %i | range X:(%f, %f) Y:(%f, %f)", (int)points.size(), minX, maxX, minY, maxY);
+    cout << endl;
+
+}
+
+void plot(vector< pair<double, double> > points) {
+
+    // default range just fits all points
+    double mnX, mxX, mnY, mxY = 0;
+
+    for (pair<double, double> p : points) {
+        if (p.first > mxX) mxX = p.first;
+        if (p.first < mnX) mnX = p.first;
+        if (p.second > mxY) mxY = p.second;
+        if (p.second < mnY) mnY = p.second;  
+    }
+
+    plot(points, mnX, mxX, mnY, mxY);
 
 }
 
@@ -78,6 +98,8 @@ int main(int argc, char * argv[]) {
         ps.push_back(nue);
     }
 
-    plot(ps, -1, 10, -1, 10); // example1.txt
+    //plot(ps, -1, 10, -1, 10); 
+
+    plot(ps);
 
 }
